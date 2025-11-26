@@ -1,0 +1,3 @@
+123456password
+qwerty
+msfadmin
