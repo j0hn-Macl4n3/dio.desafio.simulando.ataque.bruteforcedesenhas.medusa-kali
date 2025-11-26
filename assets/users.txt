@@ -1,3 +1,4 @@
 user
 msfadmin
-adminroot
+admin
+root
